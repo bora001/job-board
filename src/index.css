@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-100: #e0f2fe;
+  --color-primary-500: #3b82f6;
+  --color-primary-900: #1e40af;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-serif: "Merriweather", ui-serif;
+
+  --grid-template-columns-70-30: 70% 30%;
+}
