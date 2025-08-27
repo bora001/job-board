@@ -35,7 +35,7 @@ const JobListing = ({ job }) => {
           <div className="text-orange-700 mb-3">
             {/* <i className="fa-solid fa-location-dot text-lg"></i> */}
             <FaMapMarker className="inline text-lg mb-1 mr-1" />
-            {job.location}
+            {job.location}, {job.code}
           </div>
           <Link
             to={`/jobs/${job.id}`}

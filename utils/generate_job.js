@@ -10,16 +10,16 @@ const titles = [
 ];
 
 const locations = [
-  "Boston, MA",
-  "Miami, FL",
-  "Brooklyn, NY",
-  "Phoenix, AZ",
-  "Atlanta, GA",
-  "Portland, OR",
-  "Seattle, WA",
-  "Austin, TX",
-  "Chicago, IL",
-  "San Francisco, CA",
+  { name: "Boston", code: "MA" },
+  { name: "Miami", code: "FL" },
+  { name: "Brooklyn", code: "NY" },
+  { name: "Phoenix", code: "AZ" },
+  { name: "Atlanta", code: "GA" },
+  { name: "Portland", code: "OR" },
+  { name: "Seattle", code: "WA" },
+  { name: "Austin", code: "TX" },
+  { name: "Chicago", code: "IL" },
+  { name: "San Francisco", code: "CA" },
 ];
 
 const companies = [
@@ -40,13 +40,16 @@ function getRandom(arr) {
 }
 
 const job_list = [];
+const location_list = [];
 
 for (let i = 1; i <= 600; i++) {
+  const location = getRandom(locations);
   job_list.push({
     id: i.toString(),
     title: `${getRandom(titles)} - ${i}`,
     type: getRandom(["Full-Time", "Part-Time"]),
-    location: getRandom(locations),
+    location: location.name,
+    code: location.code,
     description: "We are looking for a passionate developer to join our team.",
     salary: getRandom([
       "$60K - $70K",
@@ -62,5 +65,15 @@ for (let i = 1; i <= 600; i++) {
     },
   });
 }
+for (let i = 0; i < locations.length; i++) {
+  location_list.push({
+    id: i.toString(),
+    code: locations[i].code,
+    location: locations[i].name,
+  });
+}
 
-fs.writeFileSync("./src/db.json", JSON.stringify({ jobs: job_list }, null, 2));
+fs.writeFileSync(
+  "./src/db.json",
+  JSON.stringify({ jobs: job_list, locations: location_list }, null, 2)
+);
