@@ -19,7 +19,7 @@ const JobListings = ({ isHome = false }) => {
         : `/api/jobs?location=${currentLocation}&_page=${page}&_per_page=6`;
       const res = await fetch(apiURL);
       const data = await res.json();
-      setJobs(data.data);
+      setJobs(isHome ? data : data.data);
       setHasNext(data.next);
       setHasPrev(data.prev);
     } catch (error) {
@@ -68,23 +68,25 @@ const JobListings = ({ isHome = false }) => {
           {isHome ? "Recent Jobs" : "Browse Jobs"}
         </h2>
         {/* filter */}
-        <div className="flex justify-end my-5">
-          <div className="w-40">
-            <select
-              id="countries"
-              defaultValue=""
-              onChange={handleChange}
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option value="">Choose a location</option>
-              {locations.map(({ code, location }) => (
-                <option key={code} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
+        {!isHome && (
+          <div className="flex justify-end my-5">
+            <div className="w-40">
+              <select
+                id="countries"
+                defaultValue=""
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="">Choose a location</option>
+                {locations.map(({ code, location }) => (
+                  <option key={code} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        )}
         {/* content */}
         {loading ? (
           <Spinner loading={loading} />
@@ -97,14 +99,16 @@ const JobListings = ({ isHome = false }) => {
         )}
       </div>
       {/* pagination */}
-      <div className="flex my-5 justify-center gap-3">
-        <Button onClick={() => prevPage()} isDisabled={!hasPrev}>
-          Prev
-        </Button>
-        <Button onClick={() => nextPage()} isDisabled={!hasNext}>
-          Next
-        </Button>
-      </div>
+      {!isHome && (
+        <div className={"flex my-5 justify-center gap-3"}>
+          <Button onClick={() => prevPage()} isDisabled={!hasPrev}>
+            Prev
+          </Button>
+          <Button onClick={() => nextPage()} isDisabled={!hasNext}>
+            Next
+          </Button>
+        </div>
+      )}
     </section>
   );
 };
