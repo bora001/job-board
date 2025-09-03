@@ -2,6 +2,7 @@ import JobListing from "./JobListing";
 import { useState, useEffect } from "react";
 import Spinner from "./Spinner";
 import Button from "./common/button";
+import { locations } from "@/constants/locations";
 
 const JobListings = ({ isHome = false }) => {
   const [jobs, setJobs] = useState([]);
@@ -9,14 +10,13 @@ const JobListings = ({ isHome = false }) => {
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
-  const [locations, setLocations] = useState([]);
   const [currentLocation, setCurrentLocation] = useState("");
 
   const fetchJobs = async () => {
     try {
       const apiURL = isHome
         ? "/api/jobs?_limit=3"
-        : `/api/jobs?location=${currentLocation}&_page=${page}&_per_page=6`;
+        : `/api/jobs?location.city=${currentLocation}&_page=${page}&_per_page=6`;
       const res = await fetch(apiURL);
       const data = await res.json();
       setJobs(isHome ? data : data.data);
@@ -33,21 +33,6 @@ const JobListings = ({ isHome = false }) => {
     fetchJobs();
   }, [currentLocation, page]);
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const res = await fetch("/api/locations");
-        const data = await res.json();
-        setLocations(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLocations();
-  }, [page]);
-
   const prevPage = () => {
     if (page > 0) {
       setPage((prev) => prev - 1);
@@ -58,8 +43,8 @@ const JobListings = ({ isHome = false }) => {
   };
 
   const handleChange = async (e) => {
-    const location = e.target.value;
-    setCurrentLocation(location);
+    const city = e.target.value;
+    setCurrentLocation(city);
   };
   return (
     <section className="bg-blue-50 px-4 py-10">
@@ -78,9 +63,9 @@ const JobListings = ({ isHome = false }) => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="">Choose a location</option>
-                {locations.map(({ code, location }) => (
-                  <option key={code} value={location}>
-                    {location}
+                {locations.map(({ stateCode, city }) => (
+                  <option key={stateCode} value={city}>
+                    {city}
                   </option>
                 ))}
               </select>
